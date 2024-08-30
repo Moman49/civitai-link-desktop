@@ -133,7 +133,10 @@ async function hashFile(pathname: string) {
   toHash[pathname] = { fileSize: stats.fileSize, status: 'pending' };
   updateLoader();
 
-  try {
+try {
+    if(!pathname.endsWith(".safetensors")){
+      new Error(`${pathname} is not a safetensors file`);
+    }
     const { modelHash, metadata } = await pool.exec('processTask', [pathname]);
     try {
       const model = await getModelByHash(modelHash);
